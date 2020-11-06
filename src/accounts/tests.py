@@ -5,6 +5,7 @@ from datetime import datetime, date
 from django.contrib.auth.models import User
 from accounts.models import Profile
 from django.test.client import Client
+import request
 
 
 f = Faker()
@@ -63,6 +64,12 @@ class AccountsIntegrationTestCase(TestCase):
         self.assertContains(resp, 'HelloWorld')
 
     def test_add_view_auth(self):
-        resp = self.client.get(reverse('profiles:add'))
-        self.assertRedirects(resp, '/account/login/?next=%2Fprofiles%2Fadd%2F')
+        if request.user.is_authenticated():
+            resp = self.client.get(reverse('profiles:add'))
+            self.assertRedirects(resp, '/account/login/?next=%2Fprofiles%2Fadd%2F')
+        else:
+            print('Пользователь не авторизова')
 
+
+# response = c.get('/redirect_me/', follow = True)
+# response.redirect_chain[]
